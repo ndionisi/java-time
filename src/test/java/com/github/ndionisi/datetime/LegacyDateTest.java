@@ -7,8 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class LegacyDateTest {
 
@@ -24,7 +23,7 @@ public class LegacyDateTest {
         ZonedDateTime zonedDateTime = ZonedDateTime.parse("2015-10-23T08:56:08+02:00[Europe/Paris]");
         ZonedDateTime zonedDateTimePlus5Days = zonedDateTime.plusDays(5);
 
-        assertThat(computedDatePlus5Days.toInstant(), equalTo(zonedDateTimePlus5Days.toInstant()));
+        assertThat(computedDatePlus5Days.toInstant()).isEqualTo(zonedDateTimePlus5Days.toInstant());
     }
 
     private Calendar getCalendar(int year, int month, int date, int hourOfDay, int minute, int second) {

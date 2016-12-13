@@ -13,9 +13,7 @@ import java.sql.Timestamp;
 import java.time.*;
 import java.util.Date;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = JavaTimeApplication.class)
@@ -35,7 +33,7 @@ public class PostgresqlDateTimeITest {
 
         Timestamp readTimestamp = jdbcTemplate.queryForObject("SELECT timestamp_with_timezone FROM date_time", Timestamp.class);
         Instant readInstant = readTimestamp.toInstant();
-        assertThat(readInstant, equalTo(instant));
+        assertThat(readInstant).isEqualTo(instant);
     }
 
     @Test
@@ -45,7 +43,7 @@ public class PostgresqlDateTimeITest {
 
         Timestamp readTimestamp = jdbcTemplate.queryForObject("SELECT timestamp_with_timezone FROM date_time", Timestamp.class);
         OffsetDateTime readOffsetDateTime = readTimestamp.toInstant().atOffset(PLUS_TWO_HOURS_OFFSET);
-        assertThat(readOffsetDateTime, equalTo(offsetDateTime));
+        assertThat(readOffsetDateTime).isEqualTo(offsetDateTime);
     }
 
     @Test
@@ -55,7 +53,7 @@ public class PostgresqlDateTimeITest {
 
         Timestamp readTimestamp = jdbcTemplate.queryForObject("SELECT timestamp_with_timezone FROM date_time", Timestamp.class);
         ZonedDateTime readZonedDateTime = readTimestamp.toInstant().atZone(EUROPE_PARIS_TIMEZONE);
-        assertThat(readZonedDateTime, equalTo(zonedDateTime));
+        assertThat(readZonedDateTime).isEqualTo(zonedDateTime);
     }
 
     @Test
@@ -64,16 +62,16 @@ public class PostgresqlDateTimeITest {
         String timestampWithTimezoneOffset = jdbcTemplate.queryForObject("SELECT TIMESTAMP WITH TIME ZONE '2015-10-23 08:56:08+02'", String.class);
         String timestampWithTimezoneTimezone = jdbcTemplate.queryForObject("SELECT TIMESTAMP WITH TIME ZONE '2015-10-23 08:56:08 Europe/Paris'", String.class);
 
-        assertThat(timestampWithoutTimezone, equalTo("2015-10-23 06:56:08"));
-        assertThat(timestampWithTimezoneOffset, equalTo("2015-10-23 08:56:08+02"));
-        assertThat(timestampWithTimezoneTimezone, equalTo("2015-10-23 08:56:08+02"));
+        assertThat(timestampWithoutTimezone).isEqualTo("2015-10-23 06:56:08");
+        assertThat(timestampWithTimezoneOffset).isEqualTo("2015-10-23 08:56:08+02");
+        assertThat(timestampWithTimezoneTimezone).isEqualTo("2015-10-23 08:56:08+02");
 
     }
 
     @Test
     public void compareTimestampWithTimezone() throws Exception {
         Boolean offsetAndTimezoneEquals = jdbcTemplate.queryForObject("SELECT TIMESTAMP WITH TIME ZONE '2015-10-23 08:56:08+02' = TIMESTAMP WITH TIME ZONE '2015-10-23 08:56:08 Europe/Paris'", Boolean.class);
-        assertThat(offsetAndTimezoneEquals, is(true));
+        assertThat(offsetAndTimezoneEquals).isTrue();
     }
 
     @Test
@@ -86,9 +84,9 @@ public class PostgresqlDateTimeITest {
         String timestampWithTimezoneOffset = jdbcTemplate.queryForObject("SELECT TIMESTAMP WITH TIME ZONE '2015-10-23 08:56:08+02' + '5 DAYS'", String.class);
         String timestampWithTimezoneTimezone = jdbcTemplate.queryForObject("SELECT TIMESTAMP WITH TIME ZONE '2015-10-23 08:56:08 Europe/Paris' + '5 DAYS'", String.class);
 
-        assertThat(timestampWithoutTimezone, equalTo("2015-10-28 06:56:08"));
-        assertThat(timestampWithTimezoneOffset, equalTo("2015-10-28 08:56:08+01"));
-        assertThat(timestampWithTimezoneTimezone, equalTo("2015-10-28 08:56:08+01"));
+        assertThat(timestampWithoutTimezone).isEqualTo("2015-10-28 06:56:08");
+        assertThat(timestampWithTimezoneOffset).isEqualTo("2015-10-28 08:56:08+01");
+        assertThat(timestampWithTimezoneTimezone).isEqualTo("2015-10-28 08:56:08+01");
     }
 
     @Test
@@ -99,9 +97,9 @@ public class PostgresqlDateTimeITest {
         String timestampWithTimezoneOffset = jdbcTemplate.queryForObject("SELECT TIMESTAMP WITH TIME ZONE '2015-10-23 08:56:08+01' + '5 DAYS'", String.class);
         String timestampWithTimezoneTimezone = jdbcTemplate.queryForObject("SELECT TIMESTAMP WITH TIME ZONE '2015-10-23 08:56:08 Africa/Algiers' + '5 DAYS'", String.class);
 
-        assertThat(timestampWithoutTimezone, equalTo("2015-10-28 06:56:08"));
-        assertThat(timestampWithTimezoneOffset, equalTo("2015-10-28 08:56:08+01"));
-        assertThat(timestampWithTimezoneTimezone, equalTo("2015-10-28 08:56:08+01"));
+        assertThat(timestampWithoutTimezone).isEqualTo("2015-10-28 06:56:08");
+        assertThat(timestampWithTimezoneOffset).isEqualTo("2015-10-28 08:56:08+01");
+        assertThat(timestampWithTimezoneTimezone).isEqualTo("2015-10-28 08:56:08+01");
     }
 
     @Test
@@ -112,8 +110,8 @@ public class PostgresqlDateTimeITest {
         jdbcTemplate.execute("SET TIME ZONE 'America/Los_Angeles'");
         String losAngelesTimestamp = jdbcTemplate.queryForObject("SELECT TIMESTAMP WITH TIME ZONE '2015-10-23 08:56:08+02'", String.class);
 
-        assertThat(parisTimestamp, equalTo("2015-10-23 08:56:08+02"));
-        assertThat(losAngelesTimestamp, equalTo("2015-10-22 23:56:08-07"));
+        assertThat(parisTimestamp).isEqualTo("2015-10-23 08:56:08+02");
+        assertThat(losAngelesTimestamp).isEqualTo("2015-10-22 23:56:08-07");
     }
 
     @Test
@@ -124,7 +122,7 @@ public class PostgresqlDateTimeITest {
         jdbcTemplate.execute("SET TIME ZONE 'America/Los_Angeles'");
         Timestamp losAngelesTimestamp = jdbcTemplate.queryForObject("SELECT TIMESTAMP WITH TIME ZONE '2015-10-23 08:56:08+02'", Timestamp.class);
 
-        assertThat(parisTimestamp, equalTo(losAngelesTimestamp));
+        assertThat(parisTimestamp).isEqualTo(losAngelesTimestamp);
     }
 
     @Test(expected = TypeMismatchDataAccessException.class)
